@@ -16,7 +16,6 @@ int num_wait = 0;//当前有多少个订单正在等待
 int W1;
 int W2;
 int test;
-int test1;
 // 食物结构体
 typedef struct {
 	char name[51];  // 食物名称
