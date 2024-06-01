@@ -5,6 +5,9 @@
 #include <graphics.h>
 #include <easyx.h>
 #include <string>
+#include <tchar.h>
+#include <iostream>
+using namespace std;
 
 
 #define MAX_SECONDS 100000 // 系统运行的最大秒数，即 7:00 到 22:00 共计 15 小时
@@ -74,8 +77,14 @@ int main() {
 	const char filename[] = "dict.dic";
 	// 读取菜单文件
 	read_menu_file(&menu, filename);
+	for (int i = 0; i < menu.num_foods; i++)
+	{
+		printf(menu.foods[i].name);
+		printf("\n");
+	}
 	initGUI();
 	drawInterface(&menu);
+	system("pause");
 	// 读取订单
 	int num_orders;
 	scanf("%d", &num_orders);
@@ -382,17 +391,21 @@ void charToTChar(const char* charArray, TCHAR* tcharArray) {
 }
 
 void drawInterface(Menu* menu) {
-	// Clear previous content
-	cleardevice();
-	TCHAR tcharName[256];
-	// Draw menu items as buttons
+	BeginBatchDraw();
+	cleardevice();  // 清屏，使用当前的背景色填充
+
+	setbkcolor(WHITE);  // 设置背景颜色为白色
+	settextcolor(BLACK);  // 设置文字颜色为黑色
+	settextstyle(16, 0, _T("Arial"));  // 设置字体大小为16点
+
+	TCHAR tcharName[256];  // TCHAR类型名称缓冲区
+	int itemHeight = 30;  // 每个项的高度设置为40像素
+
 	for (int i = 0; i < menu->num_foods; i++) {
-		rectangle(10, 50 * i + 10, 150, 50 * i + 60);
+		rectangle(10, itemHeight * i + 10, 150, itemHeight * i + itemHeight);
 		charToTChar(menu->foods[i].name, tcharName);
-		outtextxy(20, 50 * i + 20, tcharName);
+		outtextxy(20, itemHeight * i + 15, tcharName);  // 调整文字的位置
 	}
 
-	// Additional UI elements like order queue and time display
-	outtextxy(300, 10, _T("Current Orders:"));
-	outtextxy(500, 10, _T("Current Time:"));
+	EndBatchDraw();
 }
