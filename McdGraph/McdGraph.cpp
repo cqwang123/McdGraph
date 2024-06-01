@@ -56,6 +56,7 @@ void produceFood(Food* food);
 void takeNewOrder(Order* order, Menu* menu, int* waitlist, int* num_wait, int num_orders, int front);
 void takeWaitOrder(Order* orders, Menu* menu, int* waitlist, int* num_wait);
 void upDateSystem();
+int timeTrans(int hour, int min, int second);
 
 int main() {
 	Menu menu;
@@ -246,7 +247,7 @@ void takeNewOrder(Order* order, Menu* menu, int* waitlist, int* num_wait, int nu
 }
 
 void takeWaitOrder(Order* orders, Menu* menu, int* waitlist, int* num_wait) {
-	if (num_wait > 0)
+	if (*num_wait > 0)
 	{
 		for (int i = 0; i < *num_wait; i++) {
 			Order* current_order = &orders[waitlist[i]];
