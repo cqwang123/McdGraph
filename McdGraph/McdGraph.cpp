@@ -2,6 +2,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <graphics.h>
+#include <easyx.h>
+#include <string>
+
 
 #define MAX_SECONDS 100000 // 系统运行的最大秒数，即 7:00 到 22:00 共计 15 小时
 #define MAX_FOODS 101     // 最大食物种类数
@@ -58,11 +62,20 @@ void takeWaitOrder(Order* orders, Menu* menu, int* waitlist, int* num_wait);
 void upDateSystem();
 int timeTrans(int hour, int min, int second);
 
+//easyX相关函数声明
+void initGUI();//初始化GUI
+void drawInterface(Menu* menu);//绘制界面
+void charToTChar(const char* charArray, TCHAR* tcharArray);
+
+
+
 int main() {
 	Menu menu;
 	const char filename[] = "dict.dic";
 	// 读取菜单文件
 	read_menu_file(&menu, filename);
+	initGUI();
+	drawInterface(&menu);
 	// 读取订单
 	int num_orders;
 	scanf("%d", &num_orders);
@@ -191,7 +204,7 @@ void read_menu_file(Menu* menu, const char* filename) {
 			}
 		}
 		if (!isFood) { // 是套餐
-			strcpy(menu->combos[i].name, name);
+			strcpy_s(menu->combos[i].name, name);
 			menu->combos[i].num_foods = 0; // 初始化食物数量为0
 			i++; // 更新套餐索引
 		}
@@ -351,4 +364,35 @@ void upDateSystem() {
 	else if (num_wait < W2) {
 		isValid = true;
 	}
+}
+
+void initGUI() {
+	initgraph(800, 600);  // Initialize a 800x600 window
+	setbkcolor(WHITE);
+	cleardevice();
+	settextstyle(20, 0, _T("Arial"));  // Set text style for display
+}
+
+void charToTChar(const char* charArray, TCHAR* tcharArray) {
+#ifdef UNICODE  // If project is compiled in Unicode mode
+	mbstowcs(tcharArray, charArray, 256);  // Convert multi-byte to wide-char
+#else
+	strcpy(tcharArray, charArray);  // If ANSI mode, direct copy is sufficient
+#endif
+}
+
+void drawInterface(Menu* menu) {
+	// Clear previous content
+	cleardevice();
+	TCHAR tcharName[256];
+	// Draw menu items as buttons
+	for (int i = 0; i < menu->num_foods; i++) {
+		rectangle(10, 50 * i + 10, 150, 50 * i + 60);
+		charToTChar(menu->foods[i].name, tcharName);
+		outtextxy(20, 50 * i + 20, tcharName);
+	}
+
+	// Additional UI elements like order queue and time display
+	outtextxy(300, 10, _T("Current Orders:"));
+	outtextxy(500, 10, _T("Current Time:"));
 }
