@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="McdGraph.cpp">
+    <ClCompile Include="McdGraph.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
